@@ -40,8 +40,8 @@ func (o *OAuth) GetMiniSession(key, code string) (param.Params, error) {
 //
 //参数: session: 用户 session_key; iv: iv数据; data: 解密数据
 //
-//返回: mobile, error
-func (o *OAuth) GetMiniMobile(session, iv, data string) ([]byte, error) {
+//返回: param, error
+func (o *OAuth) GetMiniMobile(session, iv, data string) (param.Params, error) {
 	_key, err := base64.StdEncoding.DecodeString(session)
 	if err != nil {
 		return nil, err
@@ -60,26 +60,31 @@ func (o *OAuth) GetMiniMobile(session, iv, data string) ([]byte, error) {
 		return nil, err
 	}
 
-	return _data, nil //{"phoneNumber":"","purePhoneNumber":"","countryCode":"86","watermark":{"timestamp":1568118139,"appid":"wxc5ed1d8250b1e5ae"}}
+	params := make(param.Params)
+	if err = json.Unmarshal(_data, &params); err != nil {
+		return nil, err
+	}
+
+	return params, nil
 }
 
 //GetMiniMobileByCode 微信小程序解密手机号
 //
 // 参数: key: 微信账号; code: 小程序端获取到的code; iv: iv数据; data: 解密数据
 //
-// 返回: openid, mobile, error
-func (o *OAuth) GetMiniMobileByCode(key, code, iv, data string) (string, []byte, error) {
+// 返回: param, error
+func (o *OAuth) GetMiniMobileByCode(key, code, iv, data string) (param.Params, error) {
 	result, err := o.GetMiniSession(key, code)
 	if err != nil {
-		return "", nil, err
+		return nil, err
 	}
 
 	_data, err := o.GetMiniMobile(result.Get("session_key"), iv, data)
 	if err != nil {
-		return result.Get("openid"), nil, err
+		return nil, err
 	}
 
-	return result.Get("openid"), _data, nil
+	return _data, nil
 }
 
 //GetURL 获取跳转的url地址
