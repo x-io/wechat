@@ -20,7 +20,7 @@ func New() *OAuth {
 	return &OAuth{}
 }
 
-// GetMiniSession 通过小程序授权的code 换取session_key
+//GetMiniSession 通过小程序授权的code 换取session_key
 func (o *OAuth) GetMiniSession(key, code string) (param.Params, error) {
 	config, err := cache.GetConfig(key)
 	if err != nil {
@@ -38,9 +38,9 @@ func (o *OAuth) GetMiniSession(key, code string) (param.Params, error) {
 
 //GetMiniMobile 微信小程序解密手机号
 //
-//参数: session: 用户 session_key; iv: iv数据; data: 解密数据
+// 参数: session: 用户 session_key; iv: iv数据; data: 解密数据
 //
-//返回: param, error
+// 返回: param, error
 func (o *OAuth) GetMiniMobile(session, iv, data string) (param.Params, error) {
 	_key, err := base64.StdEncoding.DecodeString(session)
 	if err != nil {
@@ -83,7 +83,7 @@ func (o *OAuth) GetMiniMobileByCode(key, code, iv, data string) (param.Params, e
 	if err != nil {
 		return nil, err
 	}
-
+	_data["openid"] = result.Get("openid")
 	return _data, nil
 }
 
@@ -99,7 +99,7 @@ func (o *OAuth) GetURL(key, redirectURI, scope, state string) (string, error) {
 	return fmt.Sprintf(redirectOauthURL, config.AppID, urlStr, scope, state), nil
 }
 
-// GetToken 通过网页授权的code 换取access_token
+//GetToken 通过网页授权的code 换取access_token
 func (o *OAuth) GetToken(key, code string) (param.Params, error) {
 	config, err := cache.GetConfig(key)
 	if err != nil {
