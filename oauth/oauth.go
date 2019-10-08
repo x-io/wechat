@@ -36,12 +36,12 @@ func (o *OAuth) GetMiniSession(key, code string) (param.Params, error) {
 	return params, nil
 }
 
-//GetMiniMobile 微信小程序解密手机号
+//GetMiniDecrypt 小程序数据解密 通过 session_key 解密数据
 //
 // 参数: session: 用户 session_key; iv: iv数据; data: 解密数据
 //
 // 返回: param, error
-func (o *OAuth) GetMiniMobile(session, iv, data string) (param.Params, error) {
+func (o *OAuth) GetMiniDecrypt(session, iv, data string) (param.Params, error) {
 	_key, err := base64.StdEncoding.DecodeString(session)
 	if err != nil {
 		return nil, err
@@ -68,18 +68,18 @@ func (o *OAuth) GetMiniMobile(session, iv, data string) (param.Params, error) {
 	return params, nil
 }
 
-//GetMiniMobileByCode 微信小程序解密手机号
+//GetMiniDecryptByCode 小程序数据解密 通过 code 解密数据
 //
 // 参数: key: 微信账号; code: 小程序端获取到的code; iv: iv数据; data: 解密数据
 //
 // 返回: param, error
-func (o *OAuth) GetMiniMobileByCode(key, code, iv, data string) (param.Params, error) {
+func (o *OAuth) GetMiniDecryptByCode(key, code, iv, data string) (param.Params, error) {
 	result, err := o.GetMiniSession(key, code)
 	if err != nil {
 		return nil, err
 	}
 
-	_data, err := o.GetMiniMobile(result.Get("session_key"), iv, data)
+	_data, err := o.GetMiniDecrypt(result.Get("session_key"), iv, data)
 	if err != nil {
 		return nil, err
 	}

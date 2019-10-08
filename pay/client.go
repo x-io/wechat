@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/x-io/wechat/cache"
@@ -39,12 +40,20 @@ func (c *Client) processXML(apiKey string, xmlStr string) (Params, error) {
 	if params.ContainsKey("return_code") {
 		returnCode = params.Get("return_code")
 	} else {
-		return nil, errors.New("远程微信服务器异常")
+		return nil, errors.New("wechat: 远程微信服务器异常")
 	}
 
 	if returnCode == Fail {
-		return params, errors.New(params.Get("return_msg"))
+		if params.Get("return_msg") != "" {
+			return params, errors.New("wechat: " + params.Get("return_msg"))
+		} else if params.Get("retmsg") != "" {
+			return params, errors.New("wechat: " + params.Get("retmsg"))
+		}
+		return params, errors.New("wechat: 参数错误")
 	} else if returnCode == Success {
+		if params.Get("result_code") == Fail {
+			return params, errors.New("wechat: " + params.Get("err_code_des"))
+		}
 		if c.validSign(apiKey, params) {
 			return params, nil
 		}
@@ -52,9 +61,9 @@ func (c *Client) processXML(apiKey string, xmlStr string) (Params, error) {
 			return params, nil
 		}
 		//fmt.Println(apiKey,params)
-		return nil, errors.New("invalid sign value in XML")
+		return nil, errors.New("wechat: invalid sign value in XML")
 	} else {
-		return nil, errors.New("return_code value is invalid in XML")
+		return nil, errors.New("wechat: return_code value is invalid in XML")
 	}
 }
 
@@ -69,7 +78,7 @@ func (c *Client) send(key string, url string, params Params, cert bool) (Params,
 		if config.Pay.Transport == nil {
 			config.Pay.Transport, err = util.GetTransport(config.Pay.Cert, config.Pay.MchID)
 			if err != nil {
-				return nil, errors.New("证书数据为空")
+				return nil, errors.New("wechat: 证书数据为空")
 			}
 		}
 		h = &http.Client{Transport: config.Pay.Transport}
@@ -219,7 +228,7 @@ func (c *Client) ValidNotify(body string) (Params, error) {
 		return params, nil
 	}
 
-	return params, errors.New("签名认证失败")
+	return params, errors.New("wechat: 签名认证失败")
 }
 
 // //ValidNotify 交易通知验证
@@ -246,14 +255,14 @@ func (c *Client) ChooseWXPay(key string, prepayID string) (Params, error) {
 		return nil, err
 	}
 
-	params := make(Params).Set("timeStamp", util.GetCurrTs())
+	params := make(Params).Set("timeStamp", strconv.FormatInt(util.GetCurrTs(), 10))
 	params["appId"] = config.AppID
 	params["nonceStr"] = util.NonceStr()
 	params["signType"] = c.signType
 	params["package"] = "prepay_id=" + prepayID
 	params["paySign"] = c.sign(config.Pay.APIKey, params)
-	params["timestamp"] = params.Get("timeStamp")
-	delete(params, "timeStamp")
+	// params["timestamp"] = params.Get("timeStamp")
+	// delete(params, "timeStamp")
 	return params, nil
 }
 
