@@ -39,7 +39,7 @@ func (c *Client) ValidNotify(key string, body string) (Params, error) {
 		return nil, err
 	}
 
-	if validSign("", config.Pay.APIKey, params) {
+	if validSign(config.Pay.SignType, config.Pay.APIKey, params) {
 		return params, nil
 	}
 

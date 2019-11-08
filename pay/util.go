@@ -51,10 +51,6 @@ func sign(signType, apiKey string, params Params) string {
 		str        string
 	)
 
-	if signType != "" {
-		signType = params.Get("sign_type")
-	}
-
 	switch signType {
 	case MD5:
 		dataMd5 = md5.Sum(buf.Bytes())
