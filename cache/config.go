@@ -13,9 +13,10 @@ type Config struct {
 	AppID     string
 	AppSecret string
 	Pay       struct {
-		MchID  string
-		APIKey string
-		Cert   []byte
+		MchID    string
+		APIKey   string
+		SignType string
+		Cert     []byte
 
 		SandboxKey string
 		Transport  *http.Transport

@@ -17,6 +17,6 @@ var (
 func Init(call ConfigInit) {
 	cache.SetConfig(call)
 	API = api.New()
-	OAuth = oauth.New()
 	Pay = pay.New()
+	OAuth = oauth.New()
 }
