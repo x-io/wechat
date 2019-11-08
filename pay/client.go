@@ -30,11 +30,11 @@ func (c *Client) Sandbox() error {
 }
 
 //ValidNotify 交易通知验证
-func (c *Client) ValidNotify(body string) (Params, error) {
+func (c *Client) ValidNotify(key string, body string) (Params, error) {
 
 	params := Params(util.XMLToMap(body))
 
-	config, err := cache.GetConfig(params.Get("attach"))
+	config, err := cache.GetConfig(key)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func (c *Client) UnifiedOrder(key string, params Params) (Params, error) {
 	} else {
 		url = unifiedOrderURL
 	}
-	return sendAPI(key, url, params.Set("attach", key), false)
+	return sendAPI(key, url, params, false)
 }
 
 //MicroPay 刷卡支付
