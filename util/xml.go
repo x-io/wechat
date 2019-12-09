@@ -45,8 +45,14 @@ func MapToXML(params map[string]interface{}) string {
 		case string:
 			buf.WriteString(fmt.Sprintf(`<![CDATA[%s]]>`, vv))
 			break
+		case int:
+			buf.WriteString(fmt.Sprintf(`%d`, vv))
+			break
 		case int64:
 			buf.WriteString(fmt.Sprintf(`%d`, vv))
+			break
+		default:
+			buf.WriteString(fmt.Sprintf(`%s`, vv))
 			break
 		}
 
@@ -55,6 +61,5 @@ func MapToXML(params map[string]interface{}) string {
 		buf.WriteString(`>`)
 	}
 	buf.WriteString(`</xml>`)
-	//fmt.Println(params, buf.String())
 	return buf.String()
 }

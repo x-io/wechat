@@ -185,8 +185,8 @@ func (c *Client) ShortURL(key string, params Params) (Params, error) {
 	return sendAPI(key, url, params, false)
 }
 
-//AuthCodeToOpenid 授权码查询OPENID接口
-func (c *Client) AuthCodeToOpenid(key string, params Params) (Params, error) {
+//AuthCodeToOpenID 授权码查询OPENID接口
+func (c *Client) AuthCodeToOpenID(key string, params Params) (Params, error) {
 	var url string
 	if c.isSandbox {
 		url = authCodeToOpenidSandboxURL
