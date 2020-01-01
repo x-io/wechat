@@ -5,6 +5,8 @@ import (
 	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha256"
+	"crypto/tls"
+	"encoding/base64"
 	"encoding/hex"
 	"errors"
 	"io/ioutil"
@@ -121,9 +123,27 @@ func sendAPI(key string, url string, params Params, cert bool) (Params, error) {
 	var h *http.Client
 	if cert {
 		if config.Pay.Transport == nil {
-			config.Pay.Transport, err = util.GetTransport(config.Pay.Cert, config.Pay.MchID)
+			var certData []byte
+
+			if len(config.Pay.CertFile) > 0 {
+				certData, err = ioutil.ReadFile(config.Pay.CertFile)
+			}
+
+			if len(certData) == 0 && len(config.Pay.CertData) > 0 {
+				certData, err = base64.StdEncoding.DecodeString(config.Pay.CertData)
+			}
+			if len(certData) == 0 {
+				return nil, errors.New("wechat: 证书不存在")
+			}
+
+			cert, err := util.P12ToPem(certData, config.Pay.MchID)
 			if err != nil {
-				return nil, errors.New("wechat: 证书数据为空")
+				return nil, errors.New("wechat: 证书解析无效")
+			}
+
+			config.Pay.Transport = &http.Transport{
+				TLSClientConfig:    &tls.Config{Certificates: []tls.Certificate{cert}},
+				DisableCompression: true,
 			}
 		}
 		h = &http.Client{Transport: config.Pay.Transport}
@@ -182,12 +202,28 @@ func sendTransfer(key string, url string, params Params, cert bool) (Params, err
 	var h *http.Client
 	if cert {
 		if config.Pay.Transport == nil {
-			transport, _ := util.GetTransport(config.Pay.Cert, config.Pay.MchID)
+			var certData []byte
 
-			if transport == nil {
-				return nil, errors.New("证书数据为空")
+			if len(config.Pay.CertFile) > 0 {
+				certData, err = ioutil.ReadFile(config.Pay.CertFile)
 			}
-			config.Pay.Transport = transport
+
+			if len(certData) == 0 && len(config.Pay.CertData) > 0 {
+				certData, err = base64.StdEncoding.DecodeString(config.Pay.CertData)
+			}
+			if len(certData) == 0 {
+				return nil, errors.New("wechat: 证书不存在")
+			}
+
+			cert, err := util.P12ToPem(certData, config.Pay.MchID)
+			if err != nil {
+				return nil, errors.New("wechat: 证书解析无效")
+			}
+
+			config.Pay.Transport = &http.Transport{
+				TLSClientConfig:    &tls.Config{Certificates: []tls.Certificate{cert}},
+				DisableCompression: true,
+			}
 		}
 		h = &http.Client{Transport: config.Pay.Transport}
 	} else {

@@ -16,7 +16,8 @@ type Config struct {
 		MchID    string
 		APIKey   string
 		SignType string
-		Cert     []byte
+		CertFile string
+		CertData string
 
 		SandboxKey string
 		Transport  *http.Transport

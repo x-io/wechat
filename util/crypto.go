@@ -5,25 +5,23 @@ import (
 	"crypto/cipher"
 	"crypto/tls"
 	"encoding/pem"
-	"net/http"
 
 	"golang.org/x/crypto/pkcs12"
 )
 
-//GetTransport Transport
-func GetTransport(certData []byte, password string) (*http.Transport, error) {
-	cert, err := P12ToPem(certData, password)
-	if err != nil {
-		return nil, err
-	}
+// func GetTransport2(certData []byte, password string) (*http.Transport, error) {
+// 	cert, err := P12ToPem(certData, password)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return &http.Transport{
-		TLSClientConfig: &tls.Config{
-			Certificates: []tls.Certificate{cert}, // 将pkcs12证书转成pem
-		},
-		DisableCompression: true,
-	}, nil
-}
+// 	return &http.Transport{
+// 		TLSClientConfig: &tls.Config{
+// 			Certificates: []tls.Certificate{cert}, // 将pkcs12证书转成pem
+// 		},
+// 		DisableCompression: true,
+// 	}, nil
+// }
 
 //P12ToPem 将Pkcs12转成Pem
 func P12ToPem(p12 []byte, password string) (cert tls.Certificate, err error) {
