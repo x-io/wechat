@@ -29,21 +29,32 @@ func (c *Client) Sandbox() error {
 	return nil
 }
 
-//ValidNotify 交易通知验证
-func (c *Client) ValidNotify(key string, body string) (Params, error) {
-
-	params := Params(util.XMLToMap(body))
-
+//PaymentNotify 支付通知验证
+func (c *Client) PaymentNotify(key string, body string) (Params, error) {
 	config, err := cache.GetConfig(key)
 	if err != nil {
 		return nil, err
 	}
+
+	params := Params(util.XMLToMap(body))
 
 	if validSign(config.Pay.SignType, config.Pay.APIKey, params) {
 		return params, nil
 	}
 
 	return params, errors.New("wechat: 签名认证失败")
+}
+
+//RefundNotify 退款通知验证
+func (c *Client) RefundNotify(key string, body string) (Params, error) {
+	config, err := cache.GetConfig(key)
+	if err != nil {
+		return nil, err
+	}
+
+	params := Params(util.XMLToMap(body))
+
+	return decryptRefund(config.Pay.APIKey, params.Get("req_info"))
 }
 
 //ChooseWXPay 获取Js调用参数

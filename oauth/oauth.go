@@ -55,7 +55,7 @@ func (o *OAuth) GetMiniDecrypt(session, iv, data string) (param.Params, error) {
 		return nil, err
 	}
 
-	_data, err = util.AESDecrypt(_key, _iv, _data)
+	_data, err = util.AesCBCDecrypt2(_data, _key, _iv)
 	if err != nil {
 		return nil, err
 	}

@@ -9,6 +9,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"sort"
@@ -81,6 +82,22 @@ func validSign(signType, apiKey string, params Params) bool {
 	}
 
 	return params.Get(Sign) == sign(signType, apiKey, params)
+}
+
+//decryptRefund 解密退款信息
+func decryptRefund(apiKey, info string) (Params, error) {
+	if apiKey == "" {
+		return nil, fmt.Errorf("")
+	}
+
+	data, err := base64.StdEncoding.DecodeString(info)
+	if err != nil {
+		return nil, fmt.Errorf("")
+	}
+
+	body := util.AesECBDecrypt(data, []byte(fmt.Sprintf("%x", md5.Sum([]byte(key)))))
+
+	return Params(util.XMLToMap(string(body))), nil
 }
 
 func getSandboxKey(config *cache.Config) (string, error) {
