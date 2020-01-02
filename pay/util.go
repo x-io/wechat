@@ -87,15 +87,18 @@ func validSign(signType, apiKey string, params Params) bool {
 //decryptRefund 解密退款信息
 func decryptRefund(apiKey, info string) (Params, error) {
 	if apiKey == "" {
-		return nil, fmt.Errorf("")
+		return nil, fmt.Errorf("wechat: Key 不存在")
 	}
 
 	data, err := base64.StdEncoding.DecodeString(info)
 	if err != nil {
-		return nil, fmt.Errorf("")
+		return nil, fmt.Errorf("wechat: 数据解析失败")
 	}
 
-	body := util.AesECBDecrypt(data, []byte(fmt.Sprintf("%x", md5.Sum([]byte(key)))))
+	body, err := util.AesECBDecrypt(32, data, []byte(fmt.Sprintf("%x", md5.Sum([]byte(apiKey)))))
+	if err != nil {
+		return nil, fmt.Errorf("wechat: 数据解密失败")
+	}
 
 	return Params(util.XMLToMap(string(body))), nil
 }
