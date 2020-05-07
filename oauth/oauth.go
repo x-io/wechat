@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/x-io/wechat/cache"
+	"github.com/x-io/wechat/config"
 	"github.com/x-io/wechat/param"
 	"github.com/x-io/wechat/util"
 )
@@ -22,7 +22,7 @@ func New() *OAuth {
 
 //GetMiniSession 通过小程序授权的code 换取session_key
 func (o *OAuth) GetMiniSession(key, code string) (param.Params, error) {
-	config, err := cache.GetConfig(key)
+	config, err := config.GetConfig(key)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func (o *OAuth) GetMiniDecryptByCode(key, code, iv, data string) (param.Params, 
 
 //GetURL 获取跳转的url地址
 func (o *OAuth) GetURL(key, redirectURI, scope, state string) (string, error) {
-	config, err := cache.GetConfig(key)
+	config, err := config.GetConfig(key)
 	if err != nil {
 		return "", err
 	}
@@ -101,7 +101,7 @@ func (o *OAuth) GetURL(key, redirectURI, scope, state string) (string, error) {
 
 //GetToken 通过网页授权的code 换取access_token
 func (o *OAuth) GetToken(key, code string) (param.Params, error) {
-	config, err := cache.GetConfig(key)
+	config, err := config.GetConfig(key)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +117,7 @@ func (o *OAuth) GetToken(key, code string) (param.Params, error) {
 
 //RefreshOAutnToken 刷新access_token
 func (o *OAuth) RefreshOAutnToken(key, refreshToken string) (param.Params, error) {
-	config, err := cache.GetConfig(key)
+	config, err := config.GetConfig(key)
 	if err != nil {
 		return nil, err
 	}

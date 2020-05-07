@@ -15,7 +15,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/x-io/wechat/cache"
+	"github.com/x-io/wechat/config"
 	"github.com/x-io/wechat/util"
 )
 
@@ -103,7 +103,7 @@ func decryptRefund(apiKey, info string) (Params, error) {
 	return Params(util.XMLToMap(string(body))), nil
 }
 
-func getSandboxKey(config *cache.Config) (string, error) {
+func getSandboxKey(config *config.Config) (string, error) {
 	url := getSignkeyURL
 	h := &http.Client{}
 	params := make(Params)
@@ -135,7 +135,7 @@ func getSandboxKey(config *cache.Config) (string, error) {
 }
 
 func sendAPI(key string, url string, params Params, cert bool) (Params, error) {
-	config, err := cache.GetConfig(key)
+	config, err := config.GetConfig(key)
 	if err != nil {
 		return nil, err
 	}
@@ -214,7 +214,7 @@ func sendAPI(key string, url string, params Params, cert bool) (Params, error) {
 }
 
 func sendTransfer(key string, url string, params Params, cert bool) (Params, error) {
-	config, err := cache.GetConfig(key)
+	config, err := config.GetConfig(key)
 	if err != nil {
 		return nil, err
 	}

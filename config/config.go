@@ -1,11 +1,9 @@
-package cache
+package config
 
 import (
 	"errors"
 	"net/http"
 	"sync"
-
-	"github.com/coocood/freecache"
 )
 
 //Config Config
@@ -25,17 +23,14 @@ type Config struct {
 }
 
 var (
-	db    map[string]*Config
-	cache *freecache.Cache
+	db map[string]*Config
 
 	query func(key string) (*Config, error)
 	lock  sync.RWMutex
 )
 
 func init() {
-
 	db = make(map[string]*Config)
-	cache = freecache.NewCache(1024)
 }
 
 //SetConfig SetConfig
@@ -67,19 +62,4 @@ func GetConfig(key string) (*Config, error) {
 	db[key] = config
 
 	return config, nil
-}
-
-//Set Cache Set
-func Set(key, value string, expireSeconds int) error {
-	return cache.Set([]byte(key), []byte(value), expireSeconds)
-}
-
-//Get Cache Get
-func Get(key string) (string, error) {
-	var val []byte
-	val, err := cache.Get([]byte(key))
-	if err != nil {
-		return "", err
-	}
-	return string(val), nil
 }

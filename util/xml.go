@@ -52,7 +52,7 @@ func MapToXML(params map[string]interface{}) string {
 			buf.WriteString(fmt.Sprintf(`%d`, vv))
 			break
 		default:
-			buf.WriteString(fmt.Sprintf(`%s`, vv))
+			buf.WriteString(fmt.Sprintf(`<![CDATA[%s]]>`, vv))
 			break
 		}
 

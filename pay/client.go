@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/x-io/wechat/cache"
+	"github.com/x-io/wechat/config"
 	"github.com/x-io/wechat/param"
 	"github.com/x-io/wechat/util"
 )
@@ -31,7 +31,7 @@ func (c *Client) Sandbox() error {
 
 //PaymentNotify 支付通知验证
 func (c *Client) PaymentNotify(key string, body string) (Params, error) {
-	config, err := cache.GetConfig(key)
+	config, err := config.GetConfig(key)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (c *Client) PaymentNotify(key string, body string) (Params, error) {
 
 //RefundNotify 退款通知验证
 func (c *Client) RefundNotify(key string, body string) (Params, error) {
-	config, err := cache.GetConfig(key)
+	config, err := config.GetConfig(key)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (c *Client) RefundNotify(key string, body string) (Params, error) {
 
 //ChooseWXPay 获取Js调用参数
 func (c *Client) ChooseWXPay(key string, prepayID string) (Params, error) {
-	config, err := cache.GetConfig(key)
+	config, err := config.GetConfig(key)
 	if err != nil {
 		return nil, err
 	}

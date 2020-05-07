@@ -2,9 +2,11 @@ package api
 
 import (
 	"fmt"
+	"time"
 
+	"github.com/x-io/cache"
 	"github.com/x-io/wechat/api/wapi"
-	"github.com/x-io/wechat/cache"
+	"github.com/x-io/wechat/config"
 )
 
 //GetAccessToken GetAccessToken
@@ -12,7 +14,7 @@ func (m *API) GetAccessToken(key string) (accessToken string, err error) {
 	cacheKey := fmt.Sprintf("access_token_%s", key)
 	token, err := cache.Get(cacheKey)
 	if err == nil {
-		return token, nil
+		return string(token), nil
 	}
 
 	m.accessTokenLock.Lock()
@@ -20,10 +22,10 @@ func (m *API) GetAccessToken(key string) (accessToken string, err error) {
 
 	token, err = cache.Get(cacheKey)
 	if err == nil {
-		return token, nil
+		return string(token), nil
 	}
 
-	config, err := cache.GetConfig(key)
+	config, err := config.GetConfig(key)
 	if err != nil {
 		return "", err
 	}
@@ -34,7 +36,7 @@ func (m *API) GetAccessToken(key string) (accessToken string, err error) {
 		return
 	}
 	//fmt.Println("AccessToken", data.AccessToken, data.ExpiresIn)
-	cache.Set(cacheKey, data.AccessToken, data.ExpiresIn)
+	cache.Set(cacheKey, []byte(data.AccessToken), time.Duration(data.ExpiresIn)*time.Second)
 
 	accessToken = data.AccessToken
 	return

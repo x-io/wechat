@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"io"
 	"sort"
+	"time"
 
+	"github.com/x-io/cache"
 	"github.com/x-io/wechat/api/wapi"
-	"github.com/x-io/wechat/cache"
+	"github.com/x-io/wechat/config"
 	"github.com/x-io/wechat/util"
 )
 
@@ -29,7 +31,7 @@ func (m *API) GetJSConfig(key, uri string) (jsconfig *JSConfig, err error) {
 		return nil, err
 	}
 
-	config, err := cache.GetConfig(key)
+	config, err := config.GetConfig(key)
 	if err != nil {
 		return nil, err
 	}
@@ -53,14 +55,14 @@ func (m *API) GetTicket(key string) (ticketStr string, err error) {
 	token, err := cache.Get(cacheKey)
 
 	if err == nil {
-		return token, nil
+		return string(token), nil
 	}
 
 	m.ticketLock.Lock()
 	defer m.ticketLock.Unlock()
 	token, err = cache.Get(cacheKey)
 	if err == nil {
-		return token, nil
+		return string(token), nil
 	}
 
 	accessToken, err := m.GetAccessToken(key)
@@ -74,7 +76,7 @@ func (m *API) GetTicket(key string) (ticketStr string, err error) {
 		return "", err
 	}
 	ticketStr = data.Ticket
-	cache.Set(cacheKey, data.Ticket, int(data.ExpiresIn/60))
+	cache.Set(cacheKey, []byte(data.Ticket), time.Duration(data.ExpiresIn)*time.Second)
 
 	return
 }

@@ -2,7 +2,7 @@ package wechat
 
 import (
 	"github.com/x-io/wechat/api"
-	"github.com/x-io/wechat/cache"
+	"github.com/x-io/wechat/config"
 	"github.com/x-io/wechat/oauth"
 	"github.com/x-io/wechat/pay"
 )
@@ -15,7 +15,7 @@ var (
 
 //Init Init
 func Init(call ConfigInit) {
-	cache.SetConfig(call)
+	config.SetConfig(call)
 	API = api.New()
 	Pay = pay.New()
 	OAuth = oauth.New()

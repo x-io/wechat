@@ -7,7 +7,7 @@ go get -u github.com/x-io/wechat
 ## 2. Getting Started
 ```go
 func main() {
-
+    //cache.Init(&adapter.FreeCache{freecache.NewCache(1024)})
 	wechat.Init(func(key string) (*wechat.Config, error) {
         if key == "Test" {
             config := new(wechat.Config)
