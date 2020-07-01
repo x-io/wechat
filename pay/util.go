@@ -108,7 +108,14 @@ func getSandboxKey(config *config.Config) (string, error) {
 	h := &http.Client{}
 	params := make(Params)
 	params["nonce_str"] = util.NonceStr()
-	params["appid"] = config.AppID
+
+	if config.Pay.ServiceID != "" {
+		params["appid"] = config.Pay.ServiceID
+		params["sub_appid"] = config.AppID
+	} else {
+		params["appid"] = config.AppID
+	}
+
 	params["mch_id"] = config.Pay.MchID
 	params["sign_type"] = config.Pay.SignType
 	params["sign"] = sign(config.Pay.SignType, config.Pay.APIKey, params)
@@ -185,7 +192,12 @@ func sendAPI(key string, url string, params Params, cert bool) (Params, error) {
 		}
 	}
 
-	params["appid"] = config.AppID
+	if config.Pay.ServiceID != "" {
+		params["appid"] = config.Pay.ServiceID
+		params["sub_appid"] = config.AppID
+	} else {
+		params["appid"] = config.AppID
+	}
 	params["mch_id"] = config.Pay.MchID
 	params["sign_type"] = config.Pay.SignType
 	params["nonce_str"] = util.NonceStr()

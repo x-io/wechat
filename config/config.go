@@ -11,12 +11,12 @@ type Config struct {
 	AppID     string
 	AppSecret string
 	Pay       struct {
-		MchID    string
-		APIKey   string
-		SignType string
-		CertFile string
-		CertData string
-
+		MchID      string
+		APIKey     string
+		ServiceID  string
+		SignType   string
+		CertFile   string
+		CertData   string
 		SandboxKey string
 		Transport  *http.Transport
 	}

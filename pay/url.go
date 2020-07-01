@@ -31,6 +31,15 @@ const (
 	shortSandboxURL            = "https://api.mch.weixin.qq.com/sandboxnew/tools/shorturl"
 	authCodeToOpenidSandboxURL = "https://api.mch.weixin.qq.com/sandboxnew/tools/authcodetoopenid"
 
+	ProfitSharingURL               = "https://api.mch.weixin.qq.com/secapi/pay/profitsharing"
+	ProfitSharingMultiURL          = "https://api.mch.weixin.qq.com/secapi/pay/multiprofitsharing"
+	ProfitSharingFinishURL         = "https://api.mch.weixin.qq.com/secapi/pay/profitsharingfinish"
+	ProfitSharingReturnURL         = "https://api.mch.weixin.qq.com/secapi/pay/profitsharingreturn"
+	ProfitSharingQueryURL          = "https://api.mch.weixin.qq.com/pay/profitsharingquery"
+	ProfitSharinggReturQueryURL    = "https://api.mch.weixin.qq.com/pay/profitsharingreturnquery"
+	ProfitSharingAddReceiverURL    = "https://api.mch.weixin.qq.com/pay/profitsharingaddreceiver"
+	ProfitSharingRemoveReceiverURL = "https://api.mch.weixin.qq.com/pay/profitsharingremovereceiver"
+
 	transferURL     = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers"
 	transferBankURL = "https://api.mch.weixin.qq.com/mmpaysptrans/pay_bank"
 )
