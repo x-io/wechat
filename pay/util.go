@@ -194,10 +194,13 @@ func sendAPI(key string, url string, params Params, cert bool) (Params, error) {
 
 	if config.Pay.ServiceID != "" {
 		params["appid"] = config.Pay.ServiceID
-		params["sub_appid"] = config.AppID
+		if url != ProfitSharingFinishURL {
+			params["sub_appid"] = config.AppID
+		}
 	} else {
 		params["appid"] = config.AppID
 	}
+
 	params["mch_id"] = config.Pay.MchID
 	params["sign_type"] = config.Pay.SignType
 	params["nonce_str"] = util.NonceStr()
