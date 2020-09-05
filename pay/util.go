@@ -300,11 +300,16 @@ func processXML(xmlStr string) (Params, error) {
 
 		return params, nil
 	} else if returnCode == Fail {
-		if params.Get("return_msg") != "" {
+		if params.Get("error_msg") != "" {
+			return params, errors.New("wechat: " + params.Get("error_msg"))
+		} else if params.Get("error_code") != "" {
+			return params, errors.New("wechat: " + params.Get("error_code"))
+		} else if params.Get("return_msg") != "" {
 			return params, errors.New("wechat: " + params.Get("return_msg"))
 		} else if params.Get("retmsg") != "" {
 			return params, errors.New("wechat: " + params.Get("retmsg"))
 		}
+
 		return params, errors.New("wechat: 参数错误")
 	}
 

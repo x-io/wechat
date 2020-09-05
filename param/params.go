@@ -2,6 +2,7 @@ package param
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 )
 
@@ -36,7 +37,7 @@ func (p Params) Get(k string) string {
 		return strconv.FormatInt(v, 10)
 	}
 
-	return ""
+	return fmt.Sprintf("%v", s)
 }
 
 //GetInt GetInt
